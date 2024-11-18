@@ -7,13 +7,13 @@
             <h2>Users Management</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-success mb-2" href="{{ route('users.create') }}"><i class="fa fa-plus"></i> Create New User</a>
+            <a class="btn btn-success mb-2" href="{{ route('admin.users.create') }}"><i class="fa fa-plus"></i> Create New User</a>
         </div>
     </div>
 </div>
 
 @session('success')
-    <div class="alert alert-success" role="alert"> 
+    <div class="alert alert-success" role="alert">
         {{ $value }}
     </div>
 @endsession
@@ -39,9 +39,9 @@
           @endif
         </td>
         <td>
-             <a class="btn btn-info btn-sm" href="{{ route('users.show',$user->id) }}"><i class="fa-solid fa-list"></i> Show</a>
-             <a class="btn btn-primary btn-sm" href="{{ route('users.edit',$user->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-              <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="display:inline">
+             <a class="btn btn-info btn-sm" href="{{ route('admin.users.show',$user->id) }}"><i class="fa-solid fa-list"></i> Show</a>
+             <a class="btn btn-primary btn-sm" href="{{ route('admin.users.edit',$user->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+              <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" style="display:inline">
                   @csrf
                   @method('DELETE')
 

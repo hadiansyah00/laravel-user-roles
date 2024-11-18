@@ -50,7 +50,7 @@ class MahasiswaController extends Controller
             'nim' => $request->nim,
         ]);
 
-        return redirect()->route('mahasiswa.index')
+        return redirect()->route('admin.mahasiswa.index')
             ->with('success', 'Mahasiswa created successfully.');
     }
 
@@ -82,7 +82,7 @@ class MahasiswaController extends Controller
             'nim' => $request->nim,
         ]);
 
-        return redirect()->route('mahasiswa.index')
+        return redirect()->route('admin.mahasiswa.index')
             ->with('success', 'Mahasiswa updated successfully.');
     }
 
@@ -90,7 +90,7 @@ class MahasiswaController extends Controller
     {
         $mahasiswa->delete();
 
-        return redirect()->route('mahasiswa.index')
+        return redirect()->route('admin.mahasiswa.index')
             ->with('success', 'Mahasiswa deleted successfully.');
     }
 }

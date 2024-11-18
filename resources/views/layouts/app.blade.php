@@ -20,64 +20,78 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Absensi Online
+        @auth
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="#">Absensi Online</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.users.index') }}">
+                        <i class="fas fa-users"></i> Manage Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.roles.index') }}">
+                        <i class="fas fa-user-tag"></i> Manage Role
+                    </a>
+                </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.products.index') }}">
+                        <i class="fas fa-box"></i> Manage Product
+                    </a>
+                </li> --}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dataMasterDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-database"></i> Data Master
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dataMasterDropdown">
+                        <li><a class="dropdown-item" href="{{ route('admin.program-studi.index') }}"><i class="fas fa-school"></i> Program Studi</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.mahasiswa.index') }}"><i class="fas fa-user-graduate"></i> Mahasiswa</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.matakuliah.index') }}"><i class="fas fa-book"></i> Matakuliah</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="akademikDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-chalkboard-teacher"></i> Akademik
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="akademikDropdown">
+                        <li><a class="dropdown-item" href="{{ route('admin.jadwal.index') }}"><i class="fas fa-calendar-alt"></i> Jadwal Kuliah</a></li>
+                         <li><a class="dropdown-item" href="{{ route('admin.absensi.index') }}"><i class="fab fa-times-circle"></i> Absensi</a></li>
+                    </ul>
+
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.products.index') }}">
+                        <i class="fas fa-box"></i> Laporan Absensi
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <ul class="navbar-nav ms-auto">
+
+        <li class="nav-item dropdown">
+            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                <i class="fas fa-user"></i> {{ Auth::user()->name }}
+            </a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li><a class="nav-link" href="{{ route('users.index') }}">Manage Users</a></li>
-                            <li><a class="nav-link" href="{{ route('roles.index') }}">Manage Role</a></li>
-                            <li><a class="nav-link" href="{{ route('products.index') }}">Manage Product</a></li>
-                            <li><a class="nav-link" href="{{ route('program-studi.index') }}">Program Studi</a></li>
-                            <li><a class="nav-link" href="{{ route('mahasiswa.index') }}">Mahasiswa</a></li>
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
             </div>
-        </nav>
+        </li>
+    @endauth
+</ul>
+
+    </div>
+</nav>
+
 
         <main class="py-4">
             <div class="container">

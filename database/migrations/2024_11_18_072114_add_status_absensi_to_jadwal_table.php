@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('matakuliahs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('jadwal', function (Blueprint $table) {
+            $table->boolean('status_absensi')->default(false); // false berarti absensi ditutup, true berarti absensi terbuka
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('matakuliahs');
+        Schema::table('jadwal', function (Blueprint $table) {
+            $table->dropColumn('status_absensi');
+        });
     }
 };

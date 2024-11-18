@@ -15,10 +15,14 @@ class PermissionTableSeeder extends Seeder
     {
         $permissions = [
 
-           'mahasiswa-list',
-           'mahasiswa-create',
-           'mahasiswa-edit',
-           'mahasiswa-delete'
+            'matakuliah-list',
+            'matakuliah-create',
+            'matakuliah-edit',
+            'matakuliah-delete',
+            'jadwal-list',
+            'jadwal-create',
+            'jadwal-edit',
+            'jadwal-delete'
         ];
 
         foreach ($permissions as $permission) {
