@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form action="{{ route('jadwal.update', $jadwal->jadwal_id) }}" method="POST">
+    <form action="{{ route('admin.jadwal.update', $jadwal->jadwal_id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -51,7 +51,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan</button>
-        <a href="{{ route('jadwal.index') }}" class="btn btn-secondary">Batal</a>
+        <a href="{{ route('admin.jadwal.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
 @endsection

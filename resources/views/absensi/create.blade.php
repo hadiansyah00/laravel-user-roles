@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form action="{{ route('jadwal.store') }}" method="POST">
+    <form action="{{ route('admin.jadwal.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="matakuliah_id" class="form-label">Mata Kuliah</label>
@@ -50,7 +50,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan</button>
-        <a href="{{ route('jadwal.index') }}" class="btn btn-secondary">Batal</a>
+        <a href="{{ route('admin.jadwal.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
 @endsection

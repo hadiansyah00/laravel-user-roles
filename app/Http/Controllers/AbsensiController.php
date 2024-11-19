@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\StoreAbsensiRequest;
 use App\Http\Requests\UpdateAbsensiRequest;
-
+use Illuminate\Http\Request;
 class AbsensiController extends Controller
 {
     /**
@@ -56,7 +56,7 @@ class AbsensiController extends Controller
         $jadwal->status_absensi = true; // Mengubah status menjadi terbuka
         $jadwal->save();
 
-        return redirect()->route('absensi.index')
+        return redirect()->route('admin.absensi.index')
             ->with('success', 'Absensi berhasil dibuka');
     }
 
@@ -67,54 +67,94 @@ class AbsensiController extends Controller
         $jadwal->status_absensi = false; // Mengubah status menjadi tertutup
         $jadwal->save();
 
-        return redirect()->route('absensi.index')
+        return redirect()->route('admin.absensi.index')
             ->with('success', 'Absensi berhasil ditutup');
     }
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function tutupSesiAbsensi($jadwalId)
     {
-        //
+        // Temukan jadwal berdasarkan ID
+        $jadwal = Jadwal::findOrFail($jadwalId);
+
+        // Set status_absensi menjadi 0 (tutup)
+        $jadwal->status_absensi = 0;
+        $jadwal->save();
+
+        return redirect()->route('admin.absensi.detail', $jadwalId)
+            ->with('success', 'Sesi absensi telah ditutup.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAbsensiRequest $request)
+    // Fungsi untuk membuka sesi absensi
+    public function bukaSesiAbsensi($jadwalId)
     {
-        //
+        // Temukan jadwal berdasarkan ID
+        $jadwal = Jadwal::findOrFail($jadwalId);
+
+        // Set status_absensi menjadi 1 (aktif)
+        $jadwal->status_absensi = 1;
+        $jadwal->save();
+
+        return redirect()->route('admin.absensi.detail', $jadwalId)
+            ->with('success', 'Sesi absensi telah dibuka.');
+    }
+    public function updateStatus($absensiId, Request $request)
+    {
+        // Validasi input status
+        $request->validate([
+            'status' => 'required|in:hadir,tidak hadir,sakit',
+        ]);
+
+        // Temukan absensi berdasarkan ID
+        $absensi = Absensi::findOrFail($absensiId);
+
+        // Update status kehadiran mahasiswa
+        $absensi->status = $request->status;
+        $absensi->save();
+
+        return redirect()->route('admin.absensi.detail', $absensi->jadwal_id)
+            ->with('success', 'Status kehadiran berhasil diperbarui.');
+    }
+    public function riwayat(Request $request)
+    {
+        // Deklarasi variabel untuk tabel kosong secara default
+        $riwayat = collect();
+        $tanggal = $request->tanggal ?? null;
+
+        // Jika tanggal dipilih, proses data absensi
+        if ($tanggal) {
+            // Validasi tanggal
+            $request->validate([
+                'tanggal' => 'required|date',
+            ]);
+
+            // Ambil data absensi berdasarkan tanggal dan group per mahasiswa
+            $riwayat = Absensi::where('tanggal', $tanggal)
+                ->with('mahasiswa') // Relasi dengan mahasiswa
+                ->get()
+                ->groupBy('mahasiswa_id');
+        }
+
+        // Tampilkan view dengan data riwayat absensi
+        return view('absensi.detail', [
+            'riwayat' => $riwayat,
+            'tanggal' => $tanggal
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Absensi $absensi)
+    public function show($jadwal_id)
     {
-        //
-    }
+        // Ambil data jadwal berdasarkan jadwal_id
+        $jadwal = Jadwal::findOrFail($jadwal_id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Absensi $absensi)
-    {
-        //
-    }
+        // Ambil data absensi yang terkait dengan jadwal tersebut
+        $absensi = Absensi::where('jadwal_id', $jadwal_id)->get();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAbsensiRequest $request, Absensi $absensi)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Absensi $absensi)
-    {
-        //
+        // Kirim data ke view
+        return view('absensi.show', compact(
+            'jadwal',
+            'absensi'
+        ));
     }
 }

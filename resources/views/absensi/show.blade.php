@@ -1,31 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-12 margin-tb">
-        <div class="pull-left">
-            <h2> Show Product</h2>
-        </div>
-        <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('products.index') }}"> Back</a>
-        </div>
-    </div>
-</div>
+    <h4>Detail Absensi untuk Mata Kuliah: {{ $jadwal->mataKuliah->name }}</h4>
 
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="form-group">
-            <strong>Name:</strong>
-            {{ $product->name }}
-        </div>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="form-group">
-            <strong>Details:</strong>
-            {{ $product->detail }}
-        </div>
-    </div>
-</div>
-
-<p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nama Mahasiswa</th>
+                <th>Status Kehadiran</th>
+                <th>Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($absensi as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item->mahasiswa->name }}</td>
+                    <td>{{ ucfirst($item->status) }}</td>
+                    <td>{{ $item->tanggal }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 @endsection

@@ -9,29 +9,43 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\MatakuliahController;
 use App\Http\Controllers\ProgramStudiController;
+use App\Http\Controllers\Mahasiswa\ProfileController;
 use App\Http\Controllers\Auth\MahasiswaLoginController;
-use App\Http\Controllers\Auth\LoginController;
-
+use App\Http\Controllers\Mahasiswa\DashboardController;
+use App\Http\Controllers\Mahasiswa\JadwalKuliahController;
 
 // Default route menuju ke login mahasiswa
 Route::redirect('/', '/mahasiswa/login');
 
 // Routes untuk login mahasiswa
+
 Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
+    // Rute untuk login dan logout mahasiswa
     Route::get('login', [MahasiswaLoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [MahasiswaLoginController::class, 'login']);
     Route::post('logout', [MahasiswaLoginController::class, 'logout'])->name('logout');
 
     // Rute yang dilindungi oleh middleware auth mahasiswa
     Route::middleware('auth:mahasiswa')->group(function () {
-        Route::get('dashboard', function () {
-            return view('mhs.dashboard'); // View untuk dashboard mahasiswa
-        })->name('dashboard');
+        // Dashboard mahasiswa
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Profil mahasiswa
+        Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
+        Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
+
+
+        // Jadwal mahasiswa
+        Route::get('jadwal', [JadwalKuliahController::class, 'index'])->name('jadwal.index');
+
+        //Absensi
+        Route::get('jadwal/{jadwalId}/absensi', [App\Http\Controllers\Mahasiswa\AbsensiController::class, 'index'])->name('absensi.index');
+        Route::post('absensi', [App\Http\Controllers\Mahasiswa\AbsensiController::class, 'store'])->name('absensi.store');
     });
 });
-
 
 Route::name('admin.')->group(function () {
     // Form login
@@ -56,6 +70,7 @@ Route::name('admin.')->group(function () {
         Route::resource('matakuliah', MatakuliahController::class);
         Route::resource('jadwal', JadwalController::class);
         Route::resource('absensi', AbsensiController::class);
+        Route::post('absensi/tutup/{jadwalId}', [AbsensiController::class, 'tutupSesiAbsensi'])->name('absensi.tutupSesi');
 
         // Tambahan route untuk absensi
         Route::get(
@@ -64,5 +79,12 @@ Route::name('admin.')->group(function () {
         )->name('absensi.detail');
         Route::get('absensi/open/{jadwalId}', [AbsensiController::class, 'openAbsensi'])->name('absensi.open');
         Route::get('absensi/close/{jadwalId}', [AbsensiController::class, 'closeAbsensi'])->name('absensi.close');
+        Route::post('absensi/tutup/{jadwalId}', [AbsensiController::class, 'tutupSesiAbsensi'])->name('absensi.tutupSesi');
+        Route::post('absensi/buka/{jadwalId}', [AbsensiController::class, 'bukaSesiAbsensi'])->name('absensi.bukaSesi');
+        Route::put('absensi/update/{absensiId}', [AbsensiController::class, 'updateStatus'])->name('absensi.updateStatus');
+        Route::get('absensi/riwayat', [AbsensiController::class, 'riwayat'])->name('absensi.riwayat');
+        Route::get('absensi/detail/{jadwal_id}', [AbsensiController::class, 'show'])->name('admin.absensi.show');
+
+
     });
 });

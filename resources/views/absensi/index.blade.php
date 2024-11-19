@@ -38,14 +38,14 @@
                     <td>
                         @can('matakuliah-edit')  <!-- Tambahkan hak akses sesuai role pengguna -->
                             @if (!$item->status_absensi)
-                                <a href="{{ route('absensi.open', $item->jadwal_id) }}" class="btn btn-success btn-sm">
+                                <a href="{{ route('admin.absensi.open', $item->jadwal_id) }}" class="btn btn-success btn-sm">
                                     Buka Absensi
                                 </a>
                             @else
-                                <a href="{{ route('absensi.close', $item->jadwal_id) }}" class="btn btn-warning btn-sm">
+                                <a href="{{ route('admin.absensi.close', $item->jadwal_id) }}" class="btn btn-warning btn-sm">
                                     Tutup Absensi
                                 </a>
-                                  <a href="{{ route('absensi.detail', $item->jadwal_id) }}" class="btn btn-primary btn-sm">
+                                  <a href="{{ route('admin.absensi.detail', $item->jadwal_id) }}" class="btn btn-primary btn-sm">
                                     Lihat Detail
                                 </a>
                             @endif

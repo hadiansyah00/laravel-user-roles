@@ -27,50 +27,45 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav text-center">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.users.index') }}">
-                        <i class="fas fa-users"></i> Manage Users
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.roles.index') }}">
-                        <i class="fas fa-user-tag"></i> Manage Role
-                    </a>
-                </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.products.index') }}">
-                        <i class="fas fa-box"></i> Manage Product
-                    </a>
-                </li> --}}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dataMasterDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-database"></i> Data Master
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dataMasterDropdown">
-                        <li><a class="dropdown-item" href="{{ route('admin.program-studi.index') }}"><i class="fas fa-school"></i> Program Studi</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.mahasiswa.index') }}"><i class="fas fa-user-graduate"></i> Mahasiswa</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.matakuliah.index') }}"><i class="fas fa-book"></i> Matakuliah</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="akademikDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-chalkboard-teacher"></i> Akademik
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="akademikDropdown">
-                        <li><a class="dropdown-item" href="{{ route('admin.jadwal.index') }}"><i class="fas fa-calendar-alt"></i> Jadwal Kuliah</a></li>
-                         <li><a class="dropdown-item" href="{{ route('admin.absensi.index') }}"><i class="fab fa-times-circle"></i> Absensi</a></li>
-                    </ul>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav text-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.users.index') }}">
+                            <i class="fas fa-users"></i> Manage Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.roles.index') }}">
+                            <i class="fas fa-user-tag"></i> Manage Role
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dataMasterDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-database"></i> Data Master
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dataMasterDropdown">
+                            <li><a class="dropdown-item" href="{{ route('admin.program-studi.index') }}"><i class="fas fa-school"></i> Program Studi</a></li>
+                            <li><a class="dropdown-item" href="{{ route('admin.mahasiswa.index') }}"><i class="fas fa-user-graduate"></i> Mahasiswa</a></li>
+                            <li><a class="dropdown-item" href="{{ route('admin.matakuliah.index') }}"><i class="fas fa-book"></i> Matakuliah</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="akademikDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chalkboard-teacher"></i> Akademik
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="akademikDropdown">
+                            <li><a class="dropdown-item" href="{{ route('admin.jadwal.index') }}"><i class="fas fa-calendar-alt"></i> Jadwal Kuliah</a></li>
+                            <li><a class="dropdown-item" href="{{ route('admin.absensi.index') }}"><i class="fab fa-times-circle"></i> Absensi</a></li>
+                        </ul>
 
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.products.index') }}">
-                        <i class="fas fa-box"></i> Laporan Absensi
-                    </a>
-                </li>
-            </ul>
-        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.products.index') }}">
+                            <i class="fas fa-box"></i> Laporan Absensi
+                        </a>
+                    </li>
+                </ul>
+            </div>
         <ul class="navbar-nav ms-auto">
 
         <li class="nav-item dropdown">
