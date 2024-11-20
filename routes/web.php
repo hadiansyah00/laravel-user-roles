@@ -84,7 +84,13 @@ Route::name('admin.')->group(function () {
         Route::put('absensi/update/{absensiId}', [AbsensiController::class, 'updateStatus'])->name('absensi.updateStatus');
         Route::get('absensi/riwayat', [AbsensiController::class, 'riwayat'])->name('absensi.riwayat');
         Route::get('absensi/detail/{jadwal_id}', [AbsensiController::class, 'show'])->name('admin.absensi.show');
+        Route::get('/mahasiswa/data', [MahasiswaController::class, 'getMahasiswa'])->name('mahasiswa.data');
 
 
+        //Import ke Excel
+
+        Route::post('/admin/mahasiswa/import', [MahasiswaController::class, 'importExcel'])->name('mahasiswa.import');
+        Route::get('/admin/mahasiswa/template', [MahasiswaController::class, 'downloadTemplate'])
+        ->name('mahasiswa.download-template');
     });
 });

@@ -23,7 +23,7 @@
     </div>
 @endif
 
-<form method="POST" action="{{ route('roles.update', $role->id) }}">
+<form method="POST" action="{{ route('admin.roles.update', $role->id) }}">
     @csrf
     @method('PUT')
 
@@ -51,5 +51,4 @@
     </div>
 </form>
 
-<p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
 @endsection

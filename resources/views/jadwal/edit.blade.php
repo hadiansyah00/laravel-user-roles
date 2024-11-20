@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form action="{{ route('jadwal.update', $jadwal->jadwal_id) }}" method="POST">
+    <form action="{{ route('admin.jadwal.update', $jadwal->jadwal_id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">

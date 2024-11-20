@@ -7,7 +7,7 @@
             <h2>Edit Program Studi</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary btn-sm mb-2" href="{{ route('program-studi.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
+            <a class="btn btn-primary btn-sm mb-2" href="{{ route('admin.program-studi.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
         </div>
     </div>
 </div>

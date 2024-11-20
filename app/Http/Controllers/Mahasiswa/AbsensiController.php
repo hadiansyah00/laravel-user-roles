@@ -7,7 +7,7 @@ use App\Models\Absensi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-
+use Carbon\Carbon;
 
 class AbsensiController extends Controller
 {
@@ -22,37 +22,60 @@ class AbsensiController extends Controller
 
         // Mengecek apakah mahasiswa sudah absen untuk jadwal tersebut
         $absensi = Absensi::where('jadwal_id', $jadwalId)
-            ->where('mahasiswa_id', $mahasiswa->mahasiswa_id)
+            ->where('mahasiswa_id', $mahasiswa->id) // Pastikan properti `id` di Mahasiswa sesuai
             ->first();
 
-        // Menampilkan view absensi dengan data jadwal, mahasiswa dan absensi
-        return view('mhs.absensi', compact('jadwal', 'mahasiswa', 'absensi'));
+        // Mengambil riwayat absensi berdasarkan jadwal dan mahasiswa
+        $riwayatAbsensi = Absensi::where('jadwal_id', $jadwalId)
+        ->where('mahasiswa_id', $mahasiswa->mahasiswa_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+
+        Carbon::setLocale('id');
+
+        // Menampilkan view absensi dengan data jadwal, mahasiswa, absensi, dan riwayatAbsensi
+        return view('mhs.absensi', [
+            'jadwal' => $jadwal,
+            'mahasiswa' => $mahasiswa,
+            'absensi' => $absensi,
+            'riwayatAbsensi' => $riwayatAbsensi,
+        ]);
     }
 
     // Menyimpan data absensi
+    // public function show(Jadwal $jadwal)
+    // {
+    //     $mahasiswa = Auth::guard('mahasiswa')->user();
+    //     $riwayatAbsensi = Absensi::where('jadwal_id', $jadwal->id)
+    //         ->where('mahasiswa_id', $mahasiswa->id)
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+
+    //     return view('mhs.absensi', compact(
+    //         'jadwal',
+    //         'mahasiswa',
+    //         'riwayatAbsensi'
+    //     ));
+    // }
+
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'jadwal_id' => 'required|exists:jadwal,jadwal_id',
             'mahasiswa_id' => 'required|exists:mahasiswa,mahasiswa_id',
-            'status' => 'required|in:hadir,tidak hadir,izin',
+            'status' => 'required|string',
+            'keterangan' => 'nullable|string',
         ]);
 
-        // Simpan atau perbarui data absensi mahasiswa
-        Absensi::updateOrCreate(
-            [
-                'jadwal_id' => $request->jadwal_id,
-                'mahasiswa_id' => $request->mahasiswa_id,
-                'tanggal' => now()->toDateString(), // Menggunakan tanggal hari ini
-            ],
-            [
-                'status' => $request->status,
-                'keterangan' => $request->keterangan,
-            ]
-        );
+        Absensi::create([
+            'jadwal_id' => $request->jadwal_id,
+            'mahasiswa_id' => $request->mahasiswa_id,
+            'status' => $request->status,
+            'keterangan' => $request->keterangan,
+            'tanggal' => now()->addHours(7)->timezone('Asia/Jakarta')->toDateTimeString(),
+        ]);
 
-        // Mengarahkan kembali dengan pesan sukses
-        return back()->with('success', 'Absensi berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Absensi berhasil dsikirim.');
     }
 }

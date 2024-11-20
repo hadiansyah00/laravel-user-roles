@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Jadwal;
 use App\Models\Absensi;
 use Illuminate\View\View;
-use Illuminate\Support\Carbon;
+// use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\StoreAbsensiRequest;
 use App\Http\Requests\UpdateAbsensiRequest;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 class AbsensiController extends Controller
 {
     /**
@@ -31,14 +33,21 @@ class AbsensiController extends Controller
         return view('absensi.index', compact('jadwal'));
     }
     // Menampilkan detail absensi berdasarkan jadwal
-    public function detail($jadwalId): View
+    public function detail($jadwalId, Request $request): View
     {
+        // Mengambil jadwal berdasarkan ID dengan relasi mata kuliah
         $jadwal = Jadwal::with('mataKuliah')->findOrFail($jadwalId);
+
+        // Ambil tanggal yang dipilih atau gunakan tanggal hari ini
+        $tanggal = $request->get('tanggal', now()->format('Y-m-d'));
+
+        // Query absensi berdasarkan jadwal dan tanggal
         $absensi = Absensi::with('mahasiswa')
             ->where('jadwal_id', $jadwalId)
+            ->whereDate('tanggal', $tanggal)
             ->get();
 
-        // Mengambil riwayat absensi berdasarkan mahasiswa untuk jadwal tertentu
+        // Mengambil riwayat absensi mahasiswa untuk jadwal tertentu
         $riwayat = Absensi::with('mahasiswa')
             ->where('jadwal_id', $jadwalId)
             ->select('mahasiswa_id', 'status', 'tanggal')
@@ -47,8 +56,14 @@ class AbsensiController extends Controller
             ->get()
             ->groupBy('mahasiswa_id');
 
-        return view('absensi.detail', compact('jadwal', 'absensi', 'riwayat'));
+        // Set lokal untuk format tanggal
+        Carbon::setLocale('id');
+
+        return view('absensi.detail', compact('jadwal', 'absensi', 'riwayat',
+            'tanggal'
+        ));
     }
+
 
     public function openAbsensi($jadwalId)
     {

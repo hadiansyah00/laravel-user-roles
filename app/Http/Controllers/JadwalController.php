@@ -45,7 +45,7 @@ class JadwalController extends Controller
 
         Jadwal::create($request->all());
 
-        return redirect()->route('jadwal.index')
+        return redirect()->route('admin.jadwal.index')
             ->with('success', 'Jadwal created successfully.');
     }
 

@@ -7,7 +7,7 @@
             <h2>Add New Mata Kuliah</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary btn-sm" href="{{ route('matakuliah.index') }}">
+            <a class="btn btn-primary btn-sm" href="{{ route('admin.matakuliah.index') }}">
                 <i class="fa fa-arrow-left"></i> Back
             </a>
         </div>
@@ -25,7 +25,7 @@
     </div>
 @endif
 
-<form action="{{ route('matakuliah.store') }}" method="POST">
+<form action="{{ route('admin.matakuliah.store') }}" method="POST">
     @csrf
 
     <div class="row">

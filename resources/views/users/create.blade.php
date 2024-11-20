@@ -7,7 +7,7 @@
             <h2>Create New User</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary btn-sm mb-2" href="{{ route('users.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
+            <a class="btn btn-primary btn-sm mb-2" href="{{ route('admin.users.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
         </div>
     </div>
 </div>
@@ -23,7 +23,7 @@
     </div>
 @endif
 
-<form method="POST" action="{{ route('users.store') }}">
+<form method="POST" action="{{ route('admin.users.store') }}">
     @csrf
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -68,5 +68,5 @@
     </div>
 </form>
 
-<p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
+
 @endsection

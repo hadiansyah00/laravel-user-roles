@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Daftar Jadwal</h2>
         @can('jadwal-create')
-        <a class="btn btn-primary" href="{{ route('jadwal.create') }}">Tambah Jadwal</a>
+        <a class="btn btn-primary" href="{{ route('admin.jadwal.create') }}">Tambah Jadwal</a>
         @endcan
     </div>
 
@@ -39,10 +39,10 @@
                         <td>{{ $item->ruangan }}</td>
                         <td>
                             @can('jadwal-edit')
-                            <a class="btn btn-warning btn-sm" href="{{ route('jadwal.edit', $item->jadwal_id) }}">Edit</a>
+                            <a class="btn btn-warning btn-sm" href="{{ route('admin.jadwal.edit', $item->jadwal_id) }}">Edit</a>
                             @endcan
                             @can('jadwal-delete')
-                            <form action="{{ route('jadwal.destroy', $item->jadwal_id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('admin.jadwal.destroy', $item->jadwal_id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus jadwal ini?')">Hapus</button>

@@ -7,7 +7,7 @@
             <h2>Add New Program Studi</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary btn-sm" href="{{ route('program-studi.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
+            <a class="btn btn-primary btn-sm" href="{{ route('admin.program-studi.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
         </div>
     </div>
 </div>
@@ -23,7 +23,7 @@
     </div>
 @endif
 
-<form action="{{ route('program-studi.store') }}" method="POST">
+<form action="{{ route('admin.program-studi.store') }}" method="POST">
     @csrf
 
     <div class="row">
