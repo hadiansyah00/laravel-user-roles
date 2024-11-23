@@ -20,10 +20,12 @@ class AbsensiController extends Controller
         // Mengambil data mahasiswa yang sedang login
         $mahasiswa = Auth::guard('mahasiswa')->user();
 
+
         // Mengecek apakah mahasiswa sudah absen untuk jadwal tersebut
         $absensi = Absensi::where('jadwal_id', $jadwalId)
-            ->where('mahasiswa_id', $mahasiswa->id) // Pastikan properti `id` di Mahasiswa sesuai
-            ->first();
+        ->where('mahasiswa_id', $mahasiswa->mahasiswa_id) // Periksa properti `id` atau gunakan `mahasiswa_id` sesuai database
+            ->whereDate('tanggal', Carbon::now('Asia/Jakarta'))
+            ->exists();
 
         // Mengambil riwayat absensi berdasarkan jadwal dan mahasiswa
         $riwayatAbsensi = Absensi::where('jadwal_id', $jadwalId)
@@ -59,23 +61,42 @@ class AbsensiController extends Controller
     //     ));
     // }
 
+
+
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi input
+        $validatedData = $request->validate([
             'jadwal_id' => 'required|exists:jadwal,jadwal_id',
             'mahasiswa_id' => 'required|exists:mahasiswa,mahasiswa_id',
-            'status' => 'required|string',
-            'keterangan' => 'nullable|string',
+            'status' => 'required|string|max:255',
+            'keterangan' => 'nullable|string|max:255',
         ]);
 
+        // Periksa apakah mahasiswa sudah absen pada jadwal dan hari yang sama
+        $hasAbsensiToday = Absensi::where('jadwal_id', $validatedData['jadwal_id'])
+        ->where('mahasiswa_id', $validatedData['mahasiswa_id'])
+        ->whereDate(
+            'tanggal',
+            Carbon::now('Asia/Jakarta')
+        )
+        ->exists();
+
+        if ($hasAbsensiToday) {
+            return redirect()->back()->with('error', 'Anda sudah melakukan absensi hari ini.');
+        }
+
+        // Simpan absensi jika belum ada
         Absensi::create([
-            'jadwal_id' => $request->jadwal_id,
-            'mahasiswa_id' => $request->mahasiswa_id,
-            'status' => $request->status,
-            'keterangan' => $request->keterangan,
-            'tanggal' => now()->addHours(7)->timezone('Asia/Jakarta')->toDateTimeString(),
+            'jadwal_id' => $validatedData['jadwal_id'],
+            'mahasiswa_id' => $validatedData['mahasiswa_id'],
+            'status' => $validatedData['status'],
+            'keterangan' => $validatedData['keterangan'],
+            'tanggal' => now('Asia/Jakarta'),
         ]);
 
-        return redirect()->back()->with('success', 'Absensi berhasil dsikirim.');
+        return redirect()->back()->with('success', 'Absensi berhasil dikirim.');
     }
+
+
 }

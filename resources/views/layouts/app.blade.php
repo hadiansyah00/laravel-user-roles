@@ -62,7 +62,7 @@
 
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.products.index') }}">
+                        <a class="nav-link" href="{{ route('admin.laporan.index') }}">
                             <i class="fas fa-box"></i> Laporan Absensi
                         </a>
                     </li>

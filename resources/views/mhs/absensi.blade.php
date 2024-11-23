@@ -2,14 +2,33 @@
 
 @section('content')
 <div class="container">
+
     <h2>Absensi Mata Kuliah: {{ $jadwal->mataKuliah->name }}</h2>
     <p><strong>Hari:</strong> {{ $jadwal->hari }} | <strong>Jam:</strong> {{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</p>
 
-    <form action="{{ route('mahasiswa.absensi.store') }}" method="POST">
-        @csrf
-        <input type="hidden" name="jadwal_id" value="{{ $jadwal->jadwal_id }}">
-        <input type="hidden" name="mahasiswa_id" value="{{ $mahasiswa->mahasiswa_id }}">
+<form action="{{ route('mahasiswa.absensi.store') }}" method="POST">
+    @csrf
+    <input type="hidden" name="jadwal_id" value="{{ $jadwal->jadwal_id }}">
+    <input type="hidden" name="mahasiswa_id" value="{{ $mahasiswa->mahasiswa_id }}">
 
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if ($absensi)
+        <div class="alert alert-info">
+            Anda sudah melakukan absensi hari ini.
+        </div>
+        <button type="button" class="btn btn-secondary" disabled>Sudah Absen</button>
+    @else
         <div class="mb-3">
             <label for="status" class="form-label">Pilih Status Kehadiran</label>
             <select class="form-select" name="status" id="status" required>
@@ -25,7 +44,9 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Kirim Absensi</button>
-    </form>
+    @endif
+</form>
+
 
     <hr>
 

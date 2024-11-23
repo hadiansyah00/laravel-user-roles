@@ -16,6 +16,8 @@ use App\Http\Controllers\Mahasiswa\ProfileController;
 use App\Http\Controllers\Auth\MahasiswaLoginController;
 use App\Http\Controllers\Mahasiswa\DashboardController;
 use App\Http\Controllers\Mahasiswa\JadwalKuliahController;
+use App\Http\Controllers\LaporanController;
+
 
 // Default route menuju ke login mahasiswa
 Route::redirect('/', '/mahasiswa/login');
@@ -71,6 +73,7 @@ Route::name('admin.')->group(function () {
         Route::resource('jadwal', JadwalController::class);
         Route::resource('absensi', AbsensiController::class);
         Route::post('absensi/tutup/{jadwalId}', [AbsensiController::class, 'tutupSesiAbsensi'])->name('absensi.tutupSesi');
+        Route::get('rekap-absensi/{jadwalId}', [AbsensiController::class, 'rekapAbsensi'])->name('rekap.absensi');
 
         // Tambahan route untuk absensi
         Route::get(
@@ -92,5 +95,11 @@ Route::name('admin.')->group(function () {
         Route::post('/admin/mahasiswa/import', [MahasiswaController::class, 'importExcel'])->name('mahasiswa.import');
         Route::get('/admin/mahasiswa/template', [MahasiswaController::class, 'downloadTemplate'])
         ->name('mahasiswa.download-template');
+
+
+        //Laporan PDF
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::post('/laporan/generate-pdf', [LaporanController::class, 'generatePDF'])->name('laporan.generate-pdf');
+
     });
 });

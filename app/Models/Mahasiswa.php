@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable; // Gunakan Authenticatable agar bisa digunakan untuk login
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class Mahasiswa extends Authenticatable
@@ -45,10 +45,6 @@ class Mahasiswa extends Authenticatable
     /**
      * Hash password sebelum menyimpan ke database.
      */
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
 
     /**
      * Relasi ke Program Studi.
@@ -56,5 +52,9 @@ class Mahasiswa extends Authenticatable
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_studi_id');
+    }
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'mahasiswa_id');
     }
 }

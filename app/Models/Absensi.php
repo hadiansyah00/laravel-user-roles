@@ -29,12 +29,11 @@ class Absensi extends Model
     // Relasi ke model Jadwal
     public function jadwal()
     {
-        return $this->belongsTo(Jadwal::class, 'jadwal_id', 'jadwal_id');
+        return $this->belongsTo(Jadwal::class, 'jadwal_id');
     }
 
-    // Relasi ke model Siswa
     public function mahasiswa()
     {
-        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id', 'mahasiswa_id');
+        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\User;
+use App\Models\Absensi;
 use App\Models\Matakuliah;
 use App\Models\ProgramStudi;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
 
 class Jadwal extends Model
 {
@@ -37,5 +39,14 @@ class Jadwal extends Model
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_studi_id');
+    }
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'jadwal_id', 'jadwal_id');
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsToMany(Mahasiswa::class, Absensi::class, 'jadwal_id', 'mahasiswa_id', 'jadwal_id', 'mahasiswa_id');
     }
 }

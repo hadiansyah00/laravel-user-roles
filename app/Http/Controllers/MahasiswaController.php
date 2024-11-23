@@ -48,7 +48,7 @@ class MahasiswaController extends Controller
         Mahasiswa::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => bcrypt($request->password),
             'program_studi_id' => $request->program_studi_id,
             'nim' => $request->nim,
         ]);
