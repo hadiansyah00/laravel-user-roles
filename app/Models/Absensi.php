@@ -11,29 +11,27 @@ class Absensi extends Model
 {
     use HasFactory;
 
-    // Nama tabel
     protected $table = 'absensi';
-
-    // Primary key
     protected $primaryKey = 'absensi_id';
+    public $timestamps = true; // Jika tabel absensi menggunakan kolom created_at dan updated_at
 
-    // Kolom yang bisa diisi
     protected $fillable = [
         'jadwal_id',
         'mahasiswa_id',
+        'tanggal',
         'status',
         'keterangan',
-        'tanggal',
     ];
+
+    // Relasi ke model Mahasiswa
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id', 'mahasiswa_id');
+    }
 
     // Relasi ke model Jadwal
     public function jadwal()
     {
-        return $this->belongsTo(Jadwal::class, 'jadwal_id');
-    }
-
-    public function mahasiswa()
-    {
-        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
+        return $this->belongsTo(Jadwal::class, 'jadwal_id', 'jadwal_id');
     }
 }
