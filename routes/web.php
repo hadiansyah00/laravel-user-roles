@@ -7,7 +7,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\MatakuliahController;
@@ -16,7 +18,6 @@ use App\Http\Controllers\Mahasiswa\ProfileController;
 use App\Http\Controllers\Auth\MahasiswaLoginController;
 use App\Http\Controllers\Mahasiswa\DashboardController;
 use App\Http\Controllers\Mahasiswa\JadwalKuliahController;
-use App\Http\Controllers\LaporanController;
 
 
 // Default route menuju ke login mahasiswa
@@ -62,6 +63,11 @@ Route::name('admin.')->group(function () {
     // Routes yang memerlukan autentikasi
     Route::middleware('auth')->group(function () {
         Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+        //Setingan
+
+        Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
         // Resource controllers
         Route::resource('roles', RoleController::class);

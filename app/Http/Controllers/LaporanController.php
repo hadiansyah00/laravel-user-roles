@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use PDF;
+use Carbon\Carbon;
 use App\Models\Jadwal;
 use App\Models\Absensi;
-use App\Models\Mahasiswa;
+use App\Models\Setting;
 
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -34,6 +35,9 @@ class LaporanController extends Controller
         // Tentukan rentang tanggal
         list($startDate, $endDate) = $this->determineDateRange($request);
 
+        // Ambil total pertemuan dari mata kuliah terkait
+        $totalPertemuan = $jadwal->mataKuliah->total_pertemuan;
+
         // Rekap absensi berdasarkan mahasiswa_id
         $rekapAbsensi = $this->rekapAbsensi($jadwal, $startDate, $endDate);
 
@@ -44,8 +48,9 @@ class LaporanController extends Controller
         $this->checkDataAvailability($rekapAbsensi, $mahasiswa);
 
         // Generate PDF
-        return $this->generatePDFDocument($jadwal, $mahasiswa, $rekapAbsensi, $startDate, $endDate);
+        return $this->generatePDFDocument($jadwal, $mahasiswa, $rekapAbsensi, $startDate, $endDate, $totalPertemuan);
     }
+
 
     // Validasi input dari request
     private function validateRequest(Request $request)
@@ -60,8 +65,7 @@ class LaporanController extends Controller
     // Ambil jadwal beserta relasinya
     private function getJadwalWithRelations($jadwalId, Request $request)
     {
-        return Jadwal::with([
-            'mataKuliah:matakuliah_id,name',
+        return Jadwal::with(['mataKuliah:matakuliah_id,name,total_pertemuan',
             'absensi' => function ($query) use ($request) {
                 $startDate = $request->start_date ?? Carbon::now('Asia/Jakarta')->subDays(14);
                 $endDate = $request->end_date ?? Carbon::now('Asia/Jakarta');
@@ -123,32 +127,37 @@ private function mapAbsensiStatus($status)
             return redirect()->back()->with('error', 'Data absensi atau mahasiswa tidak tersedia.');
         }
     }
-public function generatePDFDocument($jadwal, $mahasiswa, $rekapAbsensi, $startDate, $endDate)
-{
-    $rekap = [];
-    foreach ($mahasiswa as $mhs) {
-        $absensi = [];
-        for ($i = 1; $i <= 14; $i++) {
-            $status = $rekapAbsensi[$mhs->mahasiswa_id][$i - 1] ?? '-'; // Tampilkan '-' jika data tidak ada
-            $absensi[] = $status;
+    public function generatePDFDocument($jadwal, $mahasiswa, $rekapAbsensi, $startDate, $endDate, $totalPertemuan)
+    {
+        // Ambil data pengaturan aplikasi
+        $settings = Setting::first(); // Mengambil data pengaturan pertama
+        $rekap = [];
+        foreach ($mahasiswa as $mhs) {
+            $absensi = [];
+            for ($i = 1; $i <= $totalPertemuan; $i++) {
+                $status = $rekapAbsensi[$mhs->mahasiswa_id][$i - 1] ?? '-'; // Tampilkan '-' jika data tidak ada
+                $absensi[] = $status;
+            }
+            $rekap[] = [
+                'nama' => $mhs->name,
+                'absensi' => $absensi,
+            ];
         }
-        $rekap[] = [
-            'nama' => $mhs->name,
-            'absensi' => $absensi,
-        ];
+
+        $pdf = PDF::loadView('laporan.pdf', [
+            'jadwal' => $jadwal,
+            'mahasiswa' => $mahasiswa,
+            'rekapAbsensi' => $rekap,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'totalPertemuan' => $totalPertemuan,
+            'settings' => $settings,
+        ])->setPaper('a4', 'landscape');
+
+        $filename = 'rekap-absensi-' . $jadwal->mataKuliah->name . '-' . now()->format('YmdHis') . '.pdf';
+        return $pdf->download($filename);
     }
 
-    $pdf = PDF::loadView('laporan.pdf', [
-        'jadwal' => $jadwal,
-        'mahasiswa' => $mahasiswa, // Kirim $mahasiswa ke view
-        'rekapAbsensi' => $rekap,
-        'startDate' => $startDate,
-        'endDate' => $endDate,
-    ])->setPaper('a4', 'landscape');
-
-    $filename = 'rekap-absensi-' . $jadwal->mataKuliah->name . '-' . now()->format('YmdHis') . '.pdf';
-    return $pdf->download($filename);
-}
 
 
 }

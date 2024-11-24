@@ -33,21 +33,33 @@ class JadwalController extends Controller
         return view('jadwal.create', compact('matakuliah'));
     }
 
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'matakuliah_id' => 'required|exists:matakuliah,matakuliah_id',
-            'hari' => 'required|string',
-            'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
-            'ruangan' => 'required|string|max:100',
-        ]);
+  public function store(Request $request): RedirectResponse
+{
+    // Validasi input dari form
+    $validatedData = $this->validateRequest($request);
 
-        Jadwal::create($request->all());
+    // Ambil program_studi_id dari matakuliah berdasarkan matakuliah_id yang dipilih
+    $matakuliah = Matakuliah::findOrFail($validatedData['matakuliah_id']);
+    $validatedData['program_studi_id'] = $matakuliah->program_studi_id;
 
-        return redirect()->route('admin.jadwal.index')
-            ->with('success', 'Jadwal created successfully.');
-    }
+    // Buat Jadwal baru dengan data yang sudah divalidasi dan ditambahkan program_studi_id
+    Jadwal::create($validatedData);
+
+    return redirect()->route('admin.jadwal.index')
+        ->with('success', 'Jadwal created successfully.');
+}
+
+protected function validateRequest(Request $request): array
+{
+    return $request->validate([
+        'matakuliah_id' => 'required|exists:matakuliah,matakuliah_id',
+        'hari' => 'required|string',
+        'tanggal' => 'required|string',
+        'jam_mulai' => 'required|date_format:H:i',
+        'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+        'ruangan' => 'required|string|max:100',
+    ]);
+}
 
     public function show(Jadwal $jadwal): View
     {
@@ -66,6 +78,7 @@ class JadwalController extends Controller
         $request->validate([
             'matakuliah_id' => 'required|exists:matakuliah,matakuliah_id',
             'hari' => 'required|string',
+             'tanggal' => 'required|string',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'ruangan' => 'required|string|max:100',
@@ -73,7 +86,7 @@ class JadwalController extends Controller
 
         $jadwal->update($request->all());
 
-        return redirect()->route('jadwal.index')
+        return redirect()->route('admin.jadwal.index')
             ->with('success', 'Jadwal updated successfully.');
     }
 

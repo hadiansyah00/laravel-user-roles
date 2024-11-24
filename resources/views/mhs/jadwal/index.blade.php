@@ -2,36 +2,47 @@
 
 @section('content')
 <div class="container">
-    <h1 class="my-4">Jadwal Kuliah</h1>
+    <h1 class="my-4">Statistik Kehadiran</h1>
 
-    @if($jadwalKuliah->isEmpty())
-        <div class="alert alert-info">
-            Tidak ada jadwal kuliah yang tersedia.
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Statistik</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Nama Mata Kuliah</th>
+                                <th>Total Kehadiran</th>
+                                <th>Total Ketidakhadiran</th>
+                                <th>Total Pertemuan</th>
+                                <th>Persentase Kehadiran</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($statistikKehadiran as $index => $data)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $data->matakuliah }}</td>
+                                    <td>{{ $data->total_hadir }}</td>
+                                    <td>{{ $data->total_tidak_hadir }}</td>
+                                    <td>{{ $data->total_pertemuan }}</td>
+                                    <td>
+                                        {{ $data->total_pertemuan > 0
+                                            ? round(($data->total_hadir / $data->total_pertemuan) * 100, 2)
+                                            : 0 }}%
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    @else
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>No</th>
-                    <th>Hari</th>
-                    <th>Jam</th>
-                    <th>Mata Kuliah</th>
-                    <th>Dosen</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($jadwalKuliah as $key => $jadwal)
-                    <tr>
-                        <td>{{ $key + 1 }}</td>
-                        <td>{{ $jadwal->hari }}</td>
-                        <td>{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td>
-                        <td>{{ $jadwal->mataKuliah->name }}</td>
-                        <td>{{ $jadwal->user->name }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+    </div>
+</div>
 
-    @endif
 </div>
 @endsection

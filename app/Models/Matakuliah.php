@@ -21,6 +21,7 @@ class Matakuliah extends Model
         'name',
         'code',
         'semester',
+        'total_pertemuan'
     ];
 
     // Relasi ke Program Studi

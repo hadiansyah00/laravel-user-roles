@@ -21,7 +21,7 @@ class Jadwal extends Model
     protected $fillable = [
         'user_id',
         'program_studi_id',
-        'mata_kuliah_id',
+        'matakuliah_id',
         'hari',
         'jam_mulai',
         'jam_selesai',
@@ -42,7 +42,6 @@ class Jadwal extends Model
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
-    // Relasi ke model ProgramStudi
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_studi_id', 'program_studi_id');

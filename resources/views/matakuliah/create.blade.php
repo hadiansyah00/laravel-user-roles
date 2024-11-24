@@ -44,6 +44,10 @@
                 <input type="text" name="code" class="form-control" placeholder="Kode Mata Kuliah" required>
             </div>
         </div>
+         <div class="mb-3">
+            <label for="total_pertemuan" class="form-label">Total Pertemuan</label>
+            <input type="number" class="form-control" id="total_pertemuan" name="total_pertemuan" value="{{ old('total_pertemuan') }}" required>
+        </div>
 
         <!-- Semester -->
         <div class="col-xs-12 col-sm-12 col-md-12">

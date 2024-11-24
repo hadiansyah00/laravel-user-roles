@@ -18,5 +18,30 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+        // Menangani pelaporan exception tertentu
+        $exceptions->report(function (\App\Exceptions\InvalidOrderException $e) {
+            \Log::error('Invalid Order Exception: ' . $e->getMessage());
+        });
+
+        // Menangani rendering untuk NotFoundHttpException
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
+            return response()->view('errors.404', [], 404);
+        });
+
+        // Menangani rendering untuk InvalidOrderException
+        $exceptions->render(function (\App\Exceptions\InvalidOrderException $e, $request) {
+            return response()->view('errors.invalid_order', ['message' => $e->getMessage()], 500);
+        });
+
+        // Menangani error umum lainnya
+        $exceptions->render(function (\Throwable $e, $request) {
+            if (app()->environment('production')) {
+                // Tampilkan halaman error umum di environment production
+                return response()->view('errors.general', ['message' => 'Terjadi kesalahan pada server.'], 500);
+            }
+
+            // Untuk environment non-production, gunakan default Laravel
+            return null;
+        });
+    })
+    ->create();

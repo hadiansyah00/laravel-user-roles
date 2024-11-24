@@ -40,7 +40,7 @@
 
                          <li class="nav-item">
                             <a class="nav-link" href="{{ route('mahasiswa.jadwal.index') }}">
-                                <i class="fas fa-calendar-alt"></i> Jadwal Kuliah
+                                <i class="fas fa-calendar-alt"></i> Statistik Absensi
                             </a>
                         </li>
                         <li class="nav-item">

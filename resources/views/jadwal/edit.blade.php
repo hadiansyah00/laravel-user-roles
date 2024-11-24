@@ -29,6 +29,11 @@
                 @endforeach
             </select>
         </div>
+          <div class="mb-3">
+              <label for="tanggal" class="form-label">Tanggal</label>
+              <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ $jadwal->tanggal }}" required>
+          </div>
+          <div class="mb-3">
 
         <div class="mb-3">
             <label for="hari" class="form-label">Hari</label>
@@ -51,7 +56,9 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan</button>
-        <a href="{{ route('jadwal.index') }}" class="btn btn-secondary">Batal</a>
+        <a href="{{ route('admin.jadwal.index') }}" class="btn btn-secondary">Batal</a>
+
+
     </form>
 </div>
 @endsection

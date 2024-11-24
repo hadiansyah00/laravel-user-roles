@@ -39,6 +39,7 @@ class MatakuliahController extends Controller
             'code' => 'required|unique:matakuliah,code',
             'program_studi_id' => 'required|exists:program_studi,program_studi_id',
             'semester' => 'required|integer|min:1',
+            'total_pertemuan' => 'required|integer|min:1',
         ]);
 
         Matakuliah::create([
@@ -46,9 +47,10 @@ class MatakuliahController extends Controller
             'code' => $request->code,
             'program_studi_id' => $request->program_studi_id,
             'semester' => $request->semester,
+            'total_pertemuan' => $request->total_pertemuan,
         ]);
 
-        return redirect()->route('matakuliah.index')
+        return redirect()->route('admin.matakuliah.index')
             ->with('success', 'Mata kuliah created successfully.');
     }
 
@@ -70,6 +72,7 @@ class MatakuliahController extends Controller
             'code' => 'required|unique:matakuliah,code,' . $matakuliah->matakuliah_id . ',matakuliah_id',
             'program_studi_id' => 'required',
             'semester' => 'required|integer|min:1',
+            'total_pertemuan' => 'required|integer|min:1',
         ]);
 
         $matakuliah->update([
@@ -77,9 +80,10 @@ class MatakuliahController extends Controller
             'code' => $request->code,
             'program_studi_id' => $request->program_studi_id,
             'semester' => $request->semester,
+            'total_pertemuan' => $request->total_pertemuan,
         ]);
 
-        return redirect()->route('matakuliah.index')
+        return redirect()->route('admin.matakuliah.index')
             ->with('success', 'Mata kuliah updated successfully.');
     }
 
