@@ -1,71 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Rekap Absensi</title>
+    <title>Laporan Rekap Absensi</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
 
+        .header {
+            display: flex;
+            align-items: center; /* Membuat logo dan teks sejajar vertikal */
+            justify-content: space-between; /* Membuat logo dan teks menjauh satu sama lain */
+            margin-bottom: 20px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+
+        .header .logo {
+            width: 80px; /* Ukuran logo */
+        }
+
+        .header .text {
+            text-align: right; /* Rata kanan untuk teks header */
+            flex: 1; /* Membuat elemen teks fleksibel */
+        }
+
+        .header .text h1 {
+            margin: 0;
+            font-size: 1.2em; /* Ukuran teks judul utama */
+        }
+
+        .header .text h2 {
+            margin: 0;
+            font-size: 1em; /* Ukuran teks subjudul */
+            color: #555; /* Warna abu-abu */
+        }
+
+        hr {
+            margin: 20px 0;
+        }
+
+        .content p {
+            margin: 5px 0;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
 
-        th,
-        td {
-            border: 1px solid #000;
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
             padding: 8px;
-            text-align: center;
+            text-align: left;
         }
 
         th {
             background-color: #f2f2f2;
         }
-
-        .text-left {
-            text-align: left;
-        }
-
-        h1 {
+         .footer {
+            margin-top: 50px;
             text-align: center;
-            margin-bottom: 20px;
+            font-size: 0.8em;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .logo {
-            width: 150px;
+        .footer img {
+            margin-top: 10px;
+            width: 100px; /* Atur ukuran barcode */
         }
     </style>
 </head>
-
 <body>
     <div class="header">
-        <!-- Logo dan Nama Website -->
-        @if($settings && $settings->logo)
-            <img src="{{ asset('storage/' . $settings->logo) }}" alt="Logo" class="logo">
+        <!-- Logo -->
+        @if($logoBase64)
+            <img src="data:image/png;base64,{{ $logoBase64 }}" alt="Logo" class="logo">
         @endif
-        <h1>{{ $settings ? $settings->name : 'Nama Aplikasi' }}</h1>
+
+        <!-- Teks Header -->
+        <div class="text">
+            <h1>Laporan Rekap Absensi</h1>
+            <h2>{{ $settings ? $settings->name : 'Nama Aplikasi' }}</h2>
+        </div>
     </div>
 
-    <p><strong>Mata Kuliah:</strong> {{ $jadwal->mataKuliah->name }}</p>
-    <p><strong>Periode:</strong> {{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }}</p>
+    <div class="content">
+        <p><strong>Mata Kuliah:</strong> {{ $jadwal->mataKuliah->name }}</p>
+        <p><strong>Periode:</strong> {{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }}</p>
+        <p><strong>Total Pertemuan:</strong> {{ $totalPertemuan }}</p>
+    </div>
 
     <table>
         <thead>
@@ -77,21 +104,26 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($rekapAbsensi as $rekap)
+            @foreach ($rekapAbsensi as $row)
                 <tr>
-                    <td>{{ $rekap['nama'] }}</td>
-                    @foreach ($rekap['absensi'] as $status)
+                    <td>{{ $row['nama'] }}</td>
+                    @foreach ($row['absensi'] as $status)
                         <td>{{ $status }}</td>
                     @endforeach
                 </tr>
             @endforeach
         </tbody>
     </table>
-
     <div class="footer">
         <!-- Copyright -->
-        <p>&copy; {{ date('Y') }} {{ $settings ? $settings->footer_name : 'Nama Aplikasi' }}. {{ $settings ? $settings->copyright : 'All rights reserved.' }}</p>
+        <p>&copy; {{ date('Y') }} {{ $settings ? $settings->footer_name : 'Nama Aplikasi' }}.
+           {{ $settings ? $settings->copyright : 'All rights reserved.' }}
+        </p>
+
+        <!-- QR Code -->
+        @if(!empty($qrCodePath))
+            <img src="{{ $qrCodePath }}" alt="QR Code">
+        @endif
     </div>
 </body>
-
 </html>

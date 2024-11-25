@@ -49,8 +49,7 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
         Route::post('absensi', [App\Http\Controllers\Mahasiswa\AbsensiController::class, 'store'])->name('absensi.store');
     });
 });
-
-Route::name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
     // Form login
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 

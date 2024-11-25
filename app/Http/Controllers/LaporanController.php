@@ -11,6 +11,9 @@ use App\Models\Setting;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Storage;
 
 class LaporanController extends Controller
 {
@@ -129,19 +132,37 @@ private function mapAbsensiStatus($status)
     }
     public function generatePDFDocument($jadwal, $mahasiswa, $rekapAbsensi, $startDate, $endDate, $totalPertemuan)
     {
-        // Ambil data pengaturan aplikasi
-        $settings = Setting::first(); // Mengambil data pengaturan pertama
+        $settings = Setting::first();
+        $websiteUrl = $settings->website_url ?? 'https://example.com';
+
+        // Generate QR code
+        $qrCode = new QrCode($websiteUrl);
+        $writer = new PngWriter();
+        $qrCodeResult = $writer->write($qrCode);
+
+        // Simpan QR code ke storage sementara
+        $qrCodePath = 'temp/qr-code.png';
+        Storage::put($qrCodePath, $qrCodeResult->getString());
+
         $rekap = [];
         foreach ($mahasiswa as $mhs) {
             $absensi = [];
             for ($i = 1; $i <= $totalPertemuan; $i++) {
-                $status = $rekapAbsensi[$mhs->mahasiswa_id][$i - 1] ?? '-'; // Tampilkan '-' jika data tidak ada
+                $status = $rekapAbsensi[$mhs->mahasiswa_id][$i - 1] ?? '-';
                 $absensi[] = $status;
             }
             $rekap[] = [
                 'nama' => $mhs->name,
                 'absensi' => $absensi,
             ];
+        }
+
+        $logoBase64 = null;
+        if ($settings && $settings->logo) {
+            $logoPath = public_path('storage/' . $settings->logo);
+            if (file_exists($logoPath)) {
+                $logoBase64 = base64_encode(file_get_contents($logoPath));
+            }
         }
 
         $pdf = PDF::loadView('laporan.pdf', [
@@ -152,11 +173,15 @@ private function mapAbsensiStatus($status)
             'endDate' => $endDate,
             'totalPertemuan' => $totalPertemuan,
             'settings' => $settings,
+            'logoBase64' => $logoBase64,
+            'qrCodePath' => Storage::url($qrCodePath), // URL ke QR code
         ])->setPaper('a4', 'landscape');
 
         $filename = 'rekap-absensi-' . $jadwal->mataKuliah->name . '-' . now()->format('YmdHis') . '.pdf';
+
         return $pdf->download($filename);
     }
+
 
 
 
